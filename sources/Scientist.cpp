@@ -16,7 +16,7 @@ namespace pandemic{
         {
                 int i = 0;
                 for(const auto &card: cards){
-                        if (board.color_of(card) == c)
+                        if (Board::color_of(card) == c)
                         {
                                 i++;
                         }
@@ -25,19 +25,11 @@ namespace pandemic{
                 {
                 throw invalid_argument("Not enough cards");        
                 }
-                i = 0;
-                City t[num];
-                for(auto &card: cards){
-                        if (board.color_of(card) == c)
-                        {
-                                t[i] = card;
-                                i++;
-                        }
-                        if(i == num){break;}
-                }
-                for (size_t i = 0; i < num; i++)
+                for (auto it = cards.begin(); it != cards.end(); i++)
                 {
-                        cards.erase(t[i]);
+                        if (i == num){break;}
+                        if (Board::color_of(*it) == c){it = cards.erase(it);}
+                        else{++it;}
                 }
                 board.mark_cured(c);
                 meditions.insert(c);

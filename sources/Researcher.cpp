@@ -3,6 +3,7 @@
 #include "Color.hpp"
 #include "Player.hpp"
 #include "Board.hpp"
+#include<array>
 using namespace std;
 const int for_discover_cure = 5;
 
@@ -18,7 +19,7 @@ namespace pandemic
                 int i = 0;
                 for (const auto &card : cards)
                 {
-                        if (board.color_of(card) == c)
+                        if (Board::color_of(card) == c)
                         {
                                 i++;
                         }
@@ -27,23 +28,11 @@ namespace pandemic
                 {
                         throw invalid_argument("Not enough cards");
                 }
-                i = 0;
-                City t[for_discover_cure];
-                for (auto &card : cards)
+                for (auto it = cards.begin(); it != cards.end(); i++)
                 {
-                        if (board.color_of(card) == c)
-                        {
-                                t[i] = card;
-                                i++;
-                        }
-                        if (i == for_discover_cure)
-                        {
-                                break;
-                        }
-                }
-                for (size_t i = 0; i < for_discover_cure; i++)
-                {
-                        cards.erase(t[i]);
+                        if (i == for_discover_cure){break;}
+                        if (Board::color_of(*it) == c){it = cards.erase(it);}
+                        else{++it;}
                 }
                 board.mark_cured(c);
                 meditions.insert(c);

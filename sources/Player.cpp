@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include "Player.hpp"
+#include <array>
 
 using namespace pandemic;
 using namespace std;
@@ -16,7 +17,7 @@ Player &Player::take_card(City c)
 }
 Player &Player::drive(City c)
 {
-        if (board.is_connected(city, c))
+        if (Board::is_connected(city, c))
         {
                 city = c;
         }
@@ -77,59 +78,61 @@ Player &Player::build()
                 board.build_research_station(city);
                 cards.erase(city);
         }
-        else{
-                throw invalid_argument("No card");        
+        else
+        {
+                throw invalid_argument("No card");
         }
 
         return *this;
 }
 Player &Player::discover_cure(Color c)
 {
-        if (meditions.count(c) != 0){return *this;}
-        
+        if (meditions.count(c) != 0)
+        {
+                return *this;
+        }
+
         if (board.is_research_station(city))
         {
                 int i = 0;
-                for(auto &card: cards){
-                        if (board.color_of(card) == c)
+                for (const auto &card : cards)
+                {
+                        if (Board::color_of(card) == c)
                         {
                                 i++;
                         }
                 }
                 if (i < for_discover_cure)
                 {
-                throw invalid_argument("Not enough cards");        
+                        throw invalid_argument("Not enough cards");
                 }
-                i = 0;
-                City t[for_discover_cure];
-                for(auto &card: cards){
-                        if (board.color_of(card) == c)
-                        {
-                                t[i] = card;
-                                i++;
-                        }
-                        if(i == for_discover_cure){break;}
-                }
-                for (size_t i = 0; i < for_discover_cure; i++)
+
+                for (auto it = cards.begin(); it != cards.end(); i++)
                 {
-                        cards.erase(t[i]);
+                        if (i == for_discover_cure){break;}
+                        if (Board::color_of(*it) == c){it = cards.erase(it);}
+                        else{++it;}
                 }
-                
+
                 board.mark_cured(c);
                 meditions.insert(c);
                 return *this;
         }
-        throw invalid_argument("Not heve research station");        
-
+        throw invalid_argument("Not heve research station");
 }
 Player &Player::treat(City c)
 {
         if (c == city && board[c] > 0)
         {
-                if (board.is_cure_discoverd(c)){board[c] = 0;}
-                else{board[c]--;}
+                if (board.is_cure_discoverd(c))
+                {
+                        board[c] = 0;
+                }
+                else
+                {
+                        board[c]--;
+                }
                 return *this;
         }
         throw invalid_argument("illigel treat");
 }
-string Player::role() { return rol; }

@@ -19,12 +19,12 @@ namespace pandemic {
             void remove_cures();
             int& operator[](City c);
             bool is_clean();
-            bool is_connected(City& c1, City& c2);
+            static bool is_connected(City& c1, City& c2);
             void build_research_station(City c);
             bool is_research_station(City c);
             void mark_cured(Color c);
             bool is_cure_discoverd(City c);
-            Color color_of(City c);
+            static Color color_of(City c);
             friend std::ostream& operator<<(std::ostream& out, Board& b);
     };
 

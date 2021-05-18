@@ -3,6 +3,7 @@
 #include "Color.hpp"
 #include "Player.hpp"
 #include "Board.hpp"
+#include <array>
 using namespace std;
 const int for_discover_cure = 5;
 
@@ -20,7 +21,7 @@ namespace pandemic
             throw invalid_argument("Not research station");
         }
 
-        int i = 0;
+        size_t i = 0;
         for (const auto &card : cards)
         {
             i++;
@@ -30,10 +31,10 @@ namespace pandemic
             throw invalid_argument("Not enough cards");
         }
         i = 0;
-        City t[for_discover_cure];
-        for (auto &card : cards)
+        array<City, for_discover_cure> t{};
+        for (const auto &card : cards)
         {
-            t[i] = card;
+            t.at(i) = card;
             i++;
             if (i == for_discover_cure)
             {
@@ -42,7 +43,7 @@ namespace pandemic
         }
         for (size_t i = 0; i < for_discover_cure; i++)
         {
-            cards.erase(t[i]);
+            cards.erase(t.at(i));
         }
         board.mark_cured(c);
         meditions.insert(c);

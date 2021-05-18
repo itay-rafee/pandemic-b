@@ -28,6 +28,6 @@ namespace pandemic
         virtual Player &discover_cure(Color c);
         virtual Player &treat(City c);
         virtual void fly(City c){};
-        std::string role();
+        std::string role(){return rol;};
     };
 };
